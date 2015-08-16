@@ -14,6 +14,8 @@ var joinPersonAddress = function (people, addresses) {
   return people
 }
 
+
+
 people.find().then(function (people) {
   var addressIds = people.map(function (person) { return person.addressId })
   addresses.find({_id: {$in: addressIds}}).then(function (addresses) {

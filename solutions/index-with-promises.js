@@ -39,7 +39,7 @@ var joinPersonEmployer = function (people, employers) {
   })
   return people
 }
-
+  
 router.get('/', function(req, res, next) {
 
   people.find({}).then(function (people) {
