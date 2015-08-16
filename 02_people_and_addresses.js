@@ -3,20 +3,16 @@ var people = db.get('people')
 var employers = db.get('employers')
 var addresses = db.get('addresses')
 
-function doStuff() {
+function getAlltheStuff() {
   return people.find({}).then(function (people) {
-    // if you return a promise from this function
-    // then the next function passed to "then" will get passed the data from the _resolved_ promise
-
-    // if you return anything _but_ a promise, it will just call the next function immediately (before the promise has resolved)
-    return addresses.find({}).then(function (addresses) {
-      return [addresses, people]
+    return employers.find({}).then(function (employers) {
+      return [employers, people]
     })
   })
 }
 
-function doMoreStuff() {
-   return doStuff().then(function (array) {
+function matchTheThings() {
+   return getAlltheStuff().then(function (array) {
     var addresses = array[0]
     var people = array[1]
       addresses.forEach(function (address) {
@@ -27,13 +23,31 @@ function doMoreStuff() {
         })
       })
       return people
+  }).then(function (object) {
+    console.log(object)
+    db.close()
   })
 }
 
 
+function matchEmployers(){
+  return getAlltheStuff().then(function (array) {
+    var bosses = array[0]
+    var people = array[1]
+    people.forEach(function (person) {
+      person.employerIds.forEach(function (id) {
+        bosses.forEach(function (boss) {
+          if(boss._id.toString()===id.toString()){
+          person.employers = boss.name
+          }
+        })
+    })
+  })
+    return people
+  }).then(function (object) {
+    console.log(object)
+    db.close()
+  })
+}
 
-doMoreStuff().then(function (bigOldObject) {
-  console.log(bigOldObject);
-   // should be an array of people, each with a .address set to the correct address
-  db.close()
-})
+matchEmployers()
